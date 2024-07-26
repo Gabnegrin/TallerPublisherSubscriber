@@ -1,0 +1,7 @@
+FROM openjdk:17-slim
+WORKDIR /app
+COPY Sender/target/sender-1.0-SNAPSHOT.jar sender.jar
+COPY wait-for-rabbitq.sh /usr/local/bin/wait-for-rabbitmq.sh
+RUN chmod +x /usr/local/bin/wait-for-rabbitmq.sh
+RUN apt-get update && apt-get install -y netcat
+ENTRYPOINT ["/usr/local/bin/wait-for-rabbitmq.sh", "rabbitmq", "java", "-jar", "sender.jar"]

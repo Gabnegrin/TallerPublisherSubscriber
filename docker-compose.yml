@@ -1,0 +1,25 @@
+version: '3'
+services:
+  rabbitmq:
+    image: "rabbitmq:3-management"
+    ports:
+      - "15672:15672"  # Puerto para la interfaz de administración de RabbitMQ
+      - "5672:5672"    # Puerto para las conexiones AMQP
+
+  sender:
+    build:
+      context: .
+      dockerfile: Dockerfile-sender
+    depends_on:
+      - rabbitmq
+    environment:
+      - RABBITMQ_HOST=rabbitmq
+
+  subscriber:
+    build:
+      context: .
+      dockerfile: Dockerfile-subscriber
+    depends_on:
+      - rabbitmq
+    environment:
+      - RABBITMQ_HOST=rabbitmq
